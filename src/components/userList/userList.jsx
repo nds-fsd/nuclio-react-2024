@@ -7,13 +7,26 @@ const UserList = () => {
 
     
     const getUsers = () => {
-        const config = {
-            //headers: { Authorization: `Bearer ${token}` }
-        }
-        return api.get('/users', config)
-            .then(res => res.data)
+        return api.get('/users')
+            .then(res => {
+                return res.data
+            })
             .catch(e => console.log(e));
     }
+
+    // const getUsersFetch = () => {
+    //     fetch('localhost:3001/users', {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //     .then(res => res.json())
+    //     .then(data => {
+    //         return data;
+    //     }).catch(e => console.log(e));
+
+    // }
 
     const {data, isLoading} = useQuery('users', getUsers);
 

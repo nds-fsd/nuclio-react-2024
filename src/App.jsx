@@ -11,7 +11,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <UserList />
       <CreateUser />
-     </QueryClientProvider>
+
+
+      
+    </QueryClientProvider>
   )
 }
 

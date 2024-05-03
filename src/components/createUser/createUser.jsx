@@ -19,18 +19,17 @@ const CreateUser = (props) => {
         }
     });
 
-    const addUser = (data) => {
+    const createUser = (data) => {
         api.post('/users', data);
     };
 
-    const mutation = useMutation(addUser, {
+    const mutation = useMutation(createUser, {
         onSuccess: () => {
           // Invalidate and refetch
             setError(undefined);
             setTimeout(() => {
                 queryClient.invalidateQueries('users');
             }, 100);
-        
         },
         onError: (error) => {
             console.log(error);
@@ -38,8 +37,15 @@ const CreateUser = (props) => {
         }
     });
 
+
     const onSubmit = (data) => {
-        console.log(watch('name'));
+        /*
+            data = {
+                name: 'Pepe',
+                email: 'pepe@gmail.com',
+                password: '123'
+            }
+        */
         mutation.mutate(data);
     };
 
