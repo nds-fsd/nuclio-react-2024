@@ -1,61 +1,35 @@
-import styles from './createUser.module.css';
+
 import { useForm } from "react-hook-form"
 import { useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 import { api } from '../../utils/apiWrapper';
+import { setUserSession } from '../../utils/localStorage.utils';
 
-const CreateUser = (props) => {
-    const queryClient = useQueryClient();
-
+const Register = ({forceUpdate}) => {
     const [error, setError] = useState();
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
-        defaultValues: {
-            name: 'Pepe',
-            email: 'pepe@gmail.com',
-            password: '123456aaA',
-            age: '30',
-            fruit: 'apple'
-        }
     });
 
-    const name = watch('name');
-
-    const createUser = (data) => {
-        api.post('/users', data);
+    const doRegister = (data) => {
+        api.post('/auth/register', data)
+        .then((response) => {
+            console.log(response);
+            if (response?.data.token) {
+                setUserSession(response.data);
+                forceUpdate();
+            }
+            
+        });
     };
 
-    const mutation = useMutation(createUser, {
-        onSuccess: () => {
-          // Invalidate and refetch
-            setError(undefined);
-            setTimeout(() => {
-                queryClient.invalidateQueries('users');
-            }, 100);
-        },
-        onError: (error) => {
-            console.log(error);
-            setError(error.message);
-        }
-    });
-
-
     const onSubmit = (data) => {
-        /*
-            data = {
-                name: 'Pepe',
-                email: 'pepe@gmail.com',
-                password: '123'
-            }
-        */
-        mutation.mutate(data);
+        doRegister(data);
     };
 
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <h2>Create user</h2>
-            {error && <div className={styles.error}>{error}</div>}
+            <h2>Register</h2>
             <label for="name">
                 Name*:
             </label>
@@ -75,7 +49,7 @@ const CreateUser = (props) => {
             <input {...register('password', { required: "Password is required", minLength: { value: 8, message: "Password must be at least 8 characters" } })} placeholder="Password" type="password" />
             {errors.password && <p>{errors.password.message}</p>}<br/>
 
-    
+           
             <input type="submit" />
     
         </form>
@@ -83,4 +57,4 @@ const CreateUser = (props) => {
 
 };
 
-export default CreateUser;
+export default Register;

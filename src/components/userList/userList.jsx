@@ -2,12 +2,18 @@ import { useQuery } from "react-query";
 import { api } from "../../utils/apiWrapper";
 import UserDetail from "../../components/userDetail/userDetail";
 import styles from './userList.module.css';
+import { get } from "react-hook-form";
+import { getUserToken } from "../../utils/localStorage.utils";
 
 const UserList = () => {
 
     
     const getUsers = () => {
-        return api.get('/users')
+        const options = {
+            headers: { Authorization: `Bearer ${getUserToken()}` }
+        };
+
+        return api.get('/users', options)
             .then(res => {
                 return res.data
             })
@@ -25,7 +31,6 @@ const UserList = () => {
     //     .then(data => {
     //         return data;
     //     }).catch(e => console.log(e));
-
     // }
 
     const {data, isLoading} = useQuery('users', getUsers);

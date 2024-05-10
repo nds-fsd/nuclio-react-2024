@@ -9,7 +9,8 @@ const UserListFetch = () => {
         fetch('localhost:3001/users', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                authorization: 'Bearer ' + getUserToken()
             }
         })
         .then(res => res.json())
